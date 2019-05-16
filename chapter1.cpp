@@ -39,4 +39,5 @@ int main()
     cout << TREASURE_SIZE << " gold pieces. " << heroName << " held on to the extra ";
     cout << TREASURE_SIZE%aliveGroupmates <<" pieces to keep things fair, of course.";
     cin.get();
+    cin.get();
 }
