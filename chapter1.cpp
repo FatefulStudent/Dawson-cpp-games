@@ -14,11 +14,11 @@ int main()
     cout << "Please enter the following information for your personalized ";
     cout << "adventure" << endl << endl;
 
-    cout << "Enter a number: ";
+    cout << "Enter a number below 50: ";
     cin >> groupSize;
     cout << "Enter a number, smaller than the first one: ";
     cin >> deadGroupmates;
-    cout << "Enter your last name: ";
+    cout << "Enter your name: ";
     cin >> heroName;
     cout << endl;
 
@@ -36,7 +36,7 @@ int main()
 
     cout << "The party was about to give up all hope. But while burying the deceased, ";
     cout << "they stumbled upon the buried fortune. So the adventurers split ";
-    cout << TREASURE_SIZE << " gold pieces. " << heroName << "held on to the extra ";
+    cout << TREASURE_SIZE << " gold pieces. " << heroName << " held on to the extra ";
     cout << TREASURE_SIZE%aliveGroupmates <<" pieces to keep things fair, of course.";
     cin.get();
 }
