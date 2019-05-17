@@ -41,4 +41,7 @@ int main()
             guessed = true;
         }
     }
+
+    cin.get();
+    cin.get();
 }
