@@ -44,8 +44,8 @@ int main()
     srand(static_cast<unsigned int>(time(0)));
 
     int chosenWord = rand() % NUM_WORDS;
-    std::string realWord = WORDS[chosenWord][0];
-    std::string wordHint = WORDS[chosenWord][1];
+    std::string realWord = WORDS[chosenWord][WORD];
+    std::string wordHint = WORDS[chosenWord][HINT];
     std::string jumbleWord = wordJumble(realWord);
 
     cout << "\t\t\tWelcome to Word Jumble!\n\n";
