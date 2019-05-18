@@ -136,7 +136,7 @@ int main()
     
     printGreeting(MAXIMUM_FAILS);
 
-    cout << "First choose a diffuculty (length of the word):"<< endl;
+    cout << "First choose the diffuculty (length of the word):"<< endl;
     cout << "EASY: 0\nMEDIUM: 1\nHARD: 2\nUNBEATABLE: 3\n";
     cout << "Your choice: ";
     cin >> difficultyChoice;
@@ -179,6 +179,7 @@ int main()
 
         cout << "Enter a guess ";
         cin >> letter;
+        cout << endl;
 
         invalidLetter = letterAlreadyUsed(letter, lettersHistory);
         if (invalidLetter)
@@ -206,6 +207,7 @@ int main()
         }
         else if (guessedLetters==wordToGuess)
         {
+            cout << guessedLetters << endl;
             cout << "CONGRATULATIONS, YOU WIN!" << endl;
             cout << "Maybe you should try higher difficulty? ;)" << endl;
             break;
@@ -219,50 +221,4 @@ int main()
     cout << "Thank you for playing!";
     cin.get();
     cin.get();
-    // cin >> fails;
-    // drawHangman(fails);
-    // cout << "Congrats!";
-    // std::vector<int>::const_iterator iter;
-    // cout << "Creating a list of scoresмл.";
-    // std::vector<int> scores;
-    // scores.push_back(1500);
-    // scores.push_back(3500);
-    // scores.push_back(7500);
-    // cout << "\nHigh Scores:\n";
-    // for (iter = scores.begin(); iter != scores.end(); ++iter)
-    // {
-    //     cout << *iter << endl;
-    // }
-    
-    // cout << "\nFinding a score.";
-    // int score;
-    // cout << "\nEnter a score to find: ";
-    // cin >> score;
-    // iter = find(scores.begin(), scores.end(), score);
-    // if (iter != scores.end())
-    // {
-    //     cout << "Score found.\n";
-    // }
-    // else
-    // {
-    //     cout << "Score not found.\n";
-    // }
-    
-    // std::random_device rd;
-    // std::mt19937 g(rd());
-    // cout << "\nRandomizing scores.";
-    // std::shuffle(scores.begin(), scores.end(), g);
-    // cout << "\nHigh Scores:\n";
-    // for (iter = scores.begin(); iter != scores.end(); ++iter)
-    // {
-    //     cout << *iter << endl;
-    // }
-
-    // cout << "\nSorting scores.";
-    // sort(scores.begin(), scores.end());
-    // cout << "\nHigh Scores:\n";
-    // for (iter = scores.begin(); iter != scores.end(); ++iter)
-    // {
-    //     cout << *iter << endl;
-    // }
 }
