@@ -34,11 +34,11 @@ int main()
 
     const std::string WORDS[NUM_WORDS][NUM_FIELDS]=
     {
-        {"wall", "bang against it"},
-        {"glasses", "4eyed nerd"},
-        {"labored", "yeah, go on. pity urself"},
-        {"persistent", "u think u are unstoppable, aint ya?"},
-        {"jumble", "you wasting ur time doing it"},
+        {"wall", "Just a brick in the.."},
+        {"glasses", "Makes your vision clearer"},
+        {"cologne", "men's parfume"},
+        {"persistent", "Do not giving up!"},
+        {"jumble", "You are playing it ;)"},
     };
 
     srand(static_cast<unsigned int>(time(0)));
@@ -81,5 +81,6 @@ int main()
     }
 
     cout << "Thank you for playing!";
+    cin.get();
     cin.get();
 }
