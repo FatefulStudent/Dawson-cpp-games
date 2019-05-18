@@ -10,9 +10,6 @@ using std::cin;
 using std::endl;
 using std::cout;
 
-const int WORDS_IN_DIFFICULTY = 2;
-const int MAXIMUM_FAILS = 8;
-enum difficulty {EASY, MEDIUM, HARD, UNBEATABLE, DIFFICULTY_NUM};
 
 void drawHangman(int fails)
 {
@@ -112,54 +109,37 @@ void drawHangman(int fails)
     
 }
 
-void printGreeting()
+void printGreeting(int maxFails)
 {
-    ;
-}
-
-difficulty getDifficulty(int difficultyChoice)
-{
-    difficulty myDifficulty;
-    switch (difficultyChoice)
-    {
-        case 0:
-            cout << "You picked EASY." << endl;
-            myDifficulty = EASY;
-            break;
-        case 1:
-            cout << "You picked MEDIUM." << endl;
-            myDifficulty = MEDIUM;
-            break;
-        case 2:
-            cout << "You picked HARD." << endl;
-            myDifficulty = HARD;
-            break;
-        case 3:
-            cout << "You picked UNBEATABLE." << endl;
-            myDifficulty = UNBEATABLE;
-            break;
-        default:
-            cout << "You made an illegal choice." << endl;
-            throw 1;
-    }
-    return myDifficulty;
-}
-
-int main()
-{
-    int fails, difficultyChoice;
-    
     cout << "Welcome to the game Hangman!" << endl << endl;
     cout << "RULES: Each round you will guess a letter in the word. If it is ";
     cout << "in the word, you will be shown its location(s). If it is not, ";
     cout << "you will lose a life." << endl;
-    cout << "You have " << MAXIMUM_FAILS << " lives, use them wisely\n\n";
+    cout << "You have " << maxFails << " lives, use them wisely\n\n";
+}
+
+bool letterAlreadyUsed(char letter, std::vector<char>& lettersHistory)
+{
+    for (int i=0; i<lettersHistory.size(); i++)
+        if (lettersHistory[i] == letter)
+            return true;
+    return false;
+}
+
+int main()
+{
+    const int WORDS_IN_DIFFICULTY = 2;
+    const int MAXIMUM_FAILS = 8;
+    enum difficulty {EASY, MEDIUM, HARD, UNBEATABLE, DIFFICULTY_NUM};
+
+    int difficultyChoice;
+    
+    printGreeting(MAXIMUM_FAILS);
 
     cout << "First choose a diffuculty (length of the word):"<< endl;
     cout << "EASY: 0\nMEDIUM: 1\nHARD: 2\nUNBEATABLE: 3\n";
     cout << "Your choice: ";
     cin >> difficultyChoice;
-    difficulty myDifficulty = difficultyChoice;
 
     std::string wordPool[DIFFICULTY_NUM][WORDS_IN_DIFFICULTY] = 
     {
@@ -171,19 +151,22 @@ int main()
 
     srand(static_cast<unsigned int>(time(0)));
     int wordNum = rand()%WORDS_IN_DIFFICULTY;
-    std::string wordToGuess = wordPool[myDifficulty][wordNum];
+    std::string wordToGuess = wordPool[difficultyChoice][wordNum];
+    
     std::string guessedLetters = "";
     for (int i=0; i < wordToGuess.size(); i++)
         guessedLetters += "-";
 
-    cout << wordToGuess << endl;
-    bool guessedWord = false, letterInWord = false;
-    char guessedLetter;
-    fails = 0;
+    // cout << wordToGuess << endl;
 
+    char letter;
+    int fails = 0;
     std::vector<char> lettersHistory;
+    bool invalidLetter, letterFound, guessedWord = false;
     while (true)
     {
+        letterFound = false;
+        
         drawHangman(fails);
         cout << "You have " << MAXIMUM_FAILS - fails << " lives left" << endl;
 
@@ -192,15 +175,26 @@ int main()
             cout << lettersHistory[i] << " ";
         cout << endl;
 
-        cout << "So far the word is:" << endl;
-        cout << guessedLetters;
-        // for (int i=0; i < wordToGuess.size(); i++)
-        //     cout << "-";
-        cout << endl;
+        cout << "So far the word is:" << endl << guessedLetters << endl;
 
         cout << "Enter a guess ";
-        cin >> guessedLetter;
-        if (!letterInWord)
+        cin >> letter;
+
+        invalidLetter = letterAlreadyUsed(letter, lettersHistory);
+        if (invalidLetter)
+        {
+            cout << "WARNING: You already used this letter!" << endl;
+            continue;
+        }
+        
+        for (int i=0; i < wordToGuess.size(); i++)
+            if (wordToGuess[i] == letter)
+            {
+                guessedLetters[i] = letter;
+                letterFound = true;
+            }
+
+        if (!letterFound)
             fails += 1;
 
         if (fails == MAXIMUM_FAILS)
@@ -210,7 +204,7 @@ int main()
             cout << "Maybe you should try lowering difficulty? ;)" << endl;
             break;
         }
-        else if (guessedWord)
+        else if (guessedLetters==wordToGuess)
         {
             cout << "CONGRATULATIONS, YOU WIN!" << endl;
             cout << "Maybe you should try higher difficulty? ;)" << endl;
@@ -218,7 +212,7 @@ int main()
         }
         else
         {
-            lettersHistory.push_back(guessedLetter);
+            lettersHistory.push_back(letter);
         }
         
     }
