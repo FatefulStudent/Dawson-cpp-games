@@ -36,8 +36,8 @@ int main()
     {
         {"wall", "Just a brick in the.."},
         {"glasses", "Makes your vision clearer"},
-        {"cologne", "men's parfume"},
-        {"persistent", "Do not giving up!"},
+        {"cologne", "Men's parfume"},
+        {"persistent", "Do not give up!"},
         {"jumble", "You are playing it ;)"},
     };
 
