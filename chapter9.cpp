@@ -1,71 +1,44 @@
 #include <iostream>
-#include <vector>
 #include <string>
-
 using namespace std;
-
 class Critter
 {
+    //make following global functions friends of the Critter class
+    friend void Peek(const Critter& aCritter);
+    friend ostream& operator<<(ostream& os, const Critter& aCritter);
 public:
     Critter(const string& name = "");
-    string GetName() const;
 private:
     string m_Name;
 };
+
 Critter::Critter(const string& name):
 m_Name(name)
 {}
-inline string Critter::GetName() const
-{   
-    return m_Name;
-}
 
+void Peek(const Critter& aCritter);
 
-class Farm
-{
-public:
-    Farm(int spaces = 1);
-    void Add(Critter* aCritter);
-    void RollCall() const;
-private:
-    vector<Critter*> m_Critters;
-};
-Farm::Farm(int spaces)
-{
-    m_Critters.reserve(spaces);
-}
-void Farm::Add(Critter* aCritter)
-{
-    cout << "Adding " << aCritter->GetName() << endl;
-    m_Critters.push_back(aCritter);
-    cout << "Added " << (*(m_Critters.end()-1))->GetName() << endl;
-}
-void Farm::RollCall() const
-{
-    for (vector<Critter*>::const_iterator iter = m_Critters.begin();
-        iter != m_Critters.end(); ++iter)
-    {
-        cout << (*iter)->GetName() << " is on a farm" << endl;// << " here.\n";
-    }
-}
+ostream& operator<<(ostream& os, const Critter& aCritter);
 
 int main()
 {
     Critter crit("Poochie");
-    cout << "My critters name is " << crit.GetName() << endl;
-    cout << "\nCreating critter farm.\n";
-    Farm myFarm(3);
-    cout << "\nAdding three critters to the farm.\n";
-    Critter a, b, c;
-    a = Critter("Moe");
-    myFarm.Add(&a);
-    b = Critter("Larry");
-    myFarm.Add(&b);
-    c = Critter("Curly");
-    myFarm.Add(&c);
-    // myFarm.Add(new Critter("Larry"));
-    // myFarm.Add(new Critter("Curly"));
-    cout << "\nCalling Roll...\n";
-    myFarm.RollCall();
+    cout << "Calling Peek() to access crit’s private data member, m_Name: \n";
+    Peek(crit);
+    cout << "\nSending crit object to cout with the << operator:\n";
+    cout << crit;
     return 0;
+}
+//global friend function which can access all of a Critter object’s members
+void Peek(const Critter& aCritter)
+{
+    cout << aCritter.m_Name << endl;
+}
+//global friend function which can access all of Critter object’s members
+//overloads the << operator so you can send a Critter object to cout
+ostream& operator<<(ostream& os, const Critter& aCritter)
+{
+    os << "Critter Object - ";
+    os << "m_Name: " << aCritter.m_Name;
+    return os;
 }
