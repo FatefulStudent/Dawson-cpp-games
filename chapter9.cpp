@@ -1,40 +1,94 @@
 #include <iostream>
+#include <string>
 using namespace std;
-int* intOnHeap(); //returns an int on the heap
-void leak1(); //creates a memory leak
-void leak2(); //creates another memory leak
+class Critter
+{
+public:
+    Critter(const string& name = "", int age = 0);
+    ~Critter(); //destructor prototype
+    Critter(const Critter& c); //copy constructor prototype
+    Critter& Critter::operator=(const Critter& c); //overloaded assignment op
+    void Greet() const;
+private:
+    string* m_pName;
+    int m_Age;
+};
+
+Critter::Critter(const string& name, int age)
+{
+    cout << "Constructor called\n";
+    m_pName = new string(name);
+    m_Age = age;
+}
+
+Critter::~Critter() //destructor definition
+{
+    cout << "Destructor called\n";
+    delete m_pName;
+}
+
+Critter::Critter(const Critter& c) //copy constructor definition
+{
+    cout << "Copy Constructor called\n";
+    m_pName = new string(*(c.m_pName));
+    m_Age = c.m_Age;
+}
+
+Critter& Critter::operator=(const Critter& c) //overloaded assignment op def
+{
+    cout << "Overloaded Assignment Operator called\n";
+    if (this != &c)
+    {
+        delete m_pName;
+        m_pName = new string(*(c.m_pName));
+        m_Age = c.m_Age;
+    }
+    return *this;
+}
+
+void Critter::Greet() const
+{
+    cout << "Im " << *m_pName << " and Im " << m_Age << " years old.\n";
+    cout << "&m_pName: " << &m_pName << endl;
+}
+
+void testDestructor();
+void testCopyConstructor(Critter aCopy);
+void testAssignmentOp();
 
 int main()
 {
-    int* pHeap = new int;
-    *pHeap = 10;
-    cout << "*pHeap: " << *pHeap << "\n\n";
-    int* pHeap2 = intOnHeap();
-    cout << "*pHeap2: " << *pHeap2 << "\n\n";
-    cout << "Freeing memory pointed to by pHeap.\n\n";
-    delete pHeap;
-    cout << "Freeing memory pointed to by pHeap2.\n\n";
-    delete pHeap2;
-    //get rid of dangling pointers
-    pHeap = 0;
-    pHeap2 = 0;
+    testDestructor();
+    cout << endl;
+    Critter crit("Poochie", 5);
+    crit.Greet();
+    testCopyConstructor(crit);
+    crit.Greet();
+    cout << endl;
+
+    cout << "test assignment";
+    testAssignmentOp();
     return 0;
 }
 
-int* intOnHeap()
+void testDestructor()
 {
-    int* pTemp = new int(20);
-    return pTemp;
+    Critter toDestroy("Rover", 3);
+    toDestroy.Greet();
 }
-
-void leak1()
+void testCopyConstructor(Critter aCopy)
 {
-    int* drip1 = new int(30);
+    aCopy.Greet();
 }
-
-void leak2()
+void testAssignmentOp()
 {
-    int* drip2 = new int(50);
-    drip2 = new int(100);
-    delete drip2;
+    Critter crit1("crit1", 7);
+    Critter crit2("crit2", 9);
+    crit1 = crit2;
+    crit1.Greet();
+    crit2.Greet();
+    cout << endl;
+    Critter crit3("crit", 11);
+    crit3 = crit3;
+    crit3.Greet();
 }
