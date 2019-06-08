@@ -38,14 +38,14 @@ void Farm::Add(Critter* aCritter)
 {
     cout << "Adding " << aCritter->GetName() << endl;
     m_Critters.push_back(aCritter);
-    cout << "Added " << (*m_Critters.end())->GetName() << endl;
+    cout << "Added " << (*(m_Critters.end()-1))->GetName() << endl;
 }
 void Farm::RollCall() const
 {
     for (vector<Critter*>::const_iterator iter = m_Critters.begin();
         iter != m_Critters.end(); ++iter)
     {
-        cout << (*(*iter)).GetName() << endl;// << " here.\n";
+        cout << (*iter)->GetName() << " is on a farm" << endl;// << " here.\n";
     }
 }
 
@@ -56,9 +56,15 @@ int main()
     cout << "\nCreating critter farm.\n";
     Farm myFarm(3);
     cout << "\nAdding three critters to the farm.\n";
-    myFarm.Add(&Critter("Moe"));
-    myFarm.Add(&Critter("Larry"));
-    myFarm.Add(&Critter("Curly"));
+    Critter a, b, c;
+    a = Critter("Moe");
+    myFarm.Add(&a);
+    b = Critter("Larry");
+    myFarm.Add(&b);
+    c = Critter("Curly");
+    myFarm.Add(&c);
+    // myFarm.Add(new Critter("Larry"));
+    // myFarm.Add(new Critter("Curly"));
     cout << "\nCalling Roll...\n";
     myFarm.RollCall();
     return 0;
