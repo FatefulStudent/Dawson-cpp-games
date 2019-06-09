@@ -1,94 +1,172 @@
 #include <iostream>
 #include <string>
 using namespace std;
-class Critter
+
+class Player
 {
 public:
-    Critter(const string& name = "", int age = 0);
-    ~Critter(); //destructor prototype
-    Critter(const Critter& c); //copy constructor prototype
-    Critter& Critter::operator=(const Critter& c); //overloaded assignment op
-    void Greet() const;
+    Player(const string& name = "");
+    string GetName() const;
+    Player* GetNext() const;
+    void SetNext(Player* next);
 private:
-    string* m_pName;
-    int m_Age;
+    string m_name;
+    Player* m_pNext;
 };
 
-Critter::Critter(const string& name, int age)
+Player::Player(const string& name):
+m_name(name),
+m_pNext(0)
+{}
+
+string Player::GetName() const
 {
-    cout << "Constructor called\n";
-    m_pName = new string(name);
-    m_Age = age;
+    return m_name;
 }
 
-Critter::~Critter() //destructor definition
-{
-    cout << "Destructor called\n";
-    delete m_pName;
+Player* Player::GetNext() const
+{   
+    return m_pNext;
 }
 
-Critter::Critter(const Critter& c) //copy constructor definition
-{
-    cout << "Copy Constructor called\n";
-    m_pName = new string(*(c.m_pName));
-    m_Age = c.m_Age;
+void Player::SetNext(Player* next)
+{   
+    m_pNext = next;
 }
 
-Critter& Critter::operator=(const Critter& c) //overloaded assignment op def
+class Lobby
 {
-    cout << "Overloaded Assignment Operator called\n";
-    if (this != &c)
+    friend ostream& operator<<(ostream& os, const Lobby& aLobby);
+private:
+    Player* m_pHead;
+public:
+    Lobby();
+    ~Lobby();
+    void AddPlayer();
+    void RemovePlayer();
+    void Clear();
+};
+
+Lobby::Lobby():
+m_pHead(0)
+{}
+
+Lobby::~Lobby()
+{
+    Clear();
+}
+
+void Lobby::AddPlayer()
+{
+    cout << "Please enter a name for the new player\n";
+    string name;
+    cin >> name;
+    Player* newPlayer = new Player(name);
+    if (m_pHead==0)
     {
-        delete m_pName;
-        m_pName = new string(*(c.m_pName));
-        m_Age = c.m_Age;
+        m_pHead = newPlayer;
     }
-    return *this;
+    else
+    {
+        Player* pIter = m_pHead;
+        while (pIter->GetNext()!=0)
+        {
+            pIter = pIter->GetNext();
+        }
+        pIter->SetNext(newPlayer);
+    }
+    
+
 }
 
-void Critter::Greet() const
+void Lobby::RemovePlayer()
 {
-    cout << "Im " << *m_pName << " and Im " << m_Age << " years old.\n";
-    cout << "&m_pName: " << &m_pName << endl;
+    if (m_pHead!=0)
+    {
+        Player* pTemp = m_pHead;
+        m_pHead = m_pHead->GetNext();
+        delete pTemp;
+    }
+    else
+    {
+        cout << "No one to remove, lobby is empty\n";
+    }
 }
 
-void testDestructor();
-void testCopyConstructor(Critter aCopy);
-void testAssignmentOp();
+void Lobby::Clear()
+{
+    Player* pIter = m_pHead;
+    while (m_pHead!=0)
+    {
+        RemovePlayer();
+    }
+}
+
+
+ostream& operator<<(ostream& os, const Lobby& aLobby)
+{
+    if (aLobby.m_pHead!=0) // Lobby is not empty
+    {
+        Player* pIter = aLobby.m_pHead;
+        while (pIter!=0)
+        {
+            os << pIter->GetName() << endl;
+            pIter = pIter->GetNext();
+        }
+    }
+    else
+    {
+        os << "Lobby is empty\n";
+    }
+    return os;
+}
+
+int getChoice(Lobby& myLobby);  
 
 int main()
 {
-    testDestructor();
-    cout << endl;
-    Critter crit("Poochie", 5);
-    crit.Greet();
-    testCopyConstructor(crit);
-    crit.Greet();
-    cout << endl;
-
-    cout << "test assignment";
-    testAssignmentOp();
+    Lobby myLobby;
+    int choice;
+    bool gameEnded = false;
+    cout << "Welcome to the lovvy!";
+    while (!gameEnded)
+    {
+        choice = getChoice(myLobby);
+        switch (choice)
+        {
+        case 0:
+            gameEnded = true;
+            cout << "Thank you for playing!\n";
+            break;
+        case 1:
+            myLobby.AddPlayer();
+            break;
+        case 2:
+            myLobby.RemovePlayer();
+            break;
+        case 3:
+            myLobby.Clear();
+            break;
+        default:
+            cout << "Please enter a valid option!\n";
+            break;
+        }
+    }
+    
+    
     return 0;
 }
 
-void testDestructor()
+int getChoice(Lobby& myLobby)
 {
-    Critter toDestroy("Rover", 3);
-    toDestroy.Greet();
-}
-void testCopyConstructor(Critter aCopy)
-{
-    aCopy.Greet();
-}
-void testAssignmentOp()
-{
-    Critter crit1("crit1", 7);
-    Critter crit2("crit2", 9);
-    crit1 = crit2;
-    crit1.Greet();
-    crit2.Greet();
-    cout << endl;
-    Critter crit3("crit", 11);
-    crit3 = crit3;
-    crit3.Greet();
+    int choice;
+    cout << "\nGAME LOBBY:\n";
+    cout << myLobby;
+    cout << "0 - Exit the program.\n";
+    cout << "1 - Add a player to the lobby.\n";
+    cout << "2 - Remove a player from the lobby.\n";
+    cout << "3 - Clear the lobby.\n";
+    cout << endl << "Enter choice: ";
+    cin >> choice;
+    return choice;
 }
